@@ -79,7 +79,7 @@ The following packages will need to be installed on your environment to deploy a
 * [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) (tested on version `2.177.0 (build b396961)`)
 * [jq](https://jqlang.github.io/jq/download/) command line JSON parser to retrieve AWS services names (tested using version `1.7.1`)
 * A container development client, such as Docker or [Finch](https://github.com/runfinch/finch) 
-* This project relies on OpenFAST (commit ID `da685d49`) and TurbSim (commit ID `873c7a70`)
+* This project relies on OpenFAST v4.0.0 (commit ID `da685d49`) and TurbSim (commit ID `873c7a70`)
 
 ## AWS account requirements
 
