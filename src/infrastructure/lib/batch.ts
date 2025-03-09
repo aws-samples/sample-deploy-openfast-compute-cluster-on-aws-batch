@@ -14,7 +14,9 @@ interface BatchStackProps extends cdk.StackProps {
     projectName: string,
     suffix: string,
     maxvCpus: number,
-    sg: ec2.SecurityGroup
+    sg: ec2.SecurityGroup,
+    openfastMemory: number,
+    turbsimMemory: number
 }
 
 
@@ -99,7 +101,7 @@ export class BatchStack extends cdk.Stack {
             retryAttempts: 1,
             container: new batch.EcsEc2ContainerDefinition(this, `container-definition-turbsim-${props.suffix}`, {
                 image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/turbsim-${props.suffix}:latest`),
-                memory: cdk.Size.mebibytes(2048),
+                memory: cdk.Size.mebibytes(props.turbsimMemory),
                 cpu: 1,
                 executionRole: jobDefinitionRole,
                 logging: ecs.LogDrivers.awsLogs({
@@ -116,7 +118,7 @@ export class BatchStack extends cdk.Stack {
             retryAttempts: 1,
             container: new batch.EcsEc2ContainerDefinition(this, `container-definition-openfast-${props.suffix}`, {
                 image: ecs.ContainerImage.fromRegistry(`${this.account}.dkr.ecr.${this.region}.amazonaws.com/openfast-${props.suffix}:latest`),
-                memory: cdk.Size.mebibytes(4096),
+                memory: cdk.Size.mebibytes(props.openfastMemory),
                 cpu: 1,
                 executionRole: jobDefinitionRole,
                 logging: ecs.LogDrivers.awsLogs({

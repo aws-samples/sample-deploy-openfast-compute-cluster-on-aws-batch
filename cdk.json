@@ -91,7 +91,9 @@
       "cidrSubnetB": "10.1.144.0/20",
       "maxvCpus": 276,
       "s3BucketAssetExpiration": 30,
-      "s3BucketLogExpiration": 60
+      "s3BucketLogExpiration": 60,
+      "openfastMemory": 2048,
+      "turbsimMemory": 2048
     }
   }
 }
