@@ -85,7 +85,7 @@
     "prod": {
       "environment": "production",
       "project": "openfast",
-      "uuid": "6b7e0fa0-4b4b-42",
+      "uuid": null,
       "cidr": "10.1.0.0/16",
       "cidrSubnetA": "10.1.128.0/20",
       "cidrSubnetB": "10.1.144.0/20",
