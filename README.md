@@ -163,7 +163,7 @@ The `PROJECT_UUID` must be unique for each deployed stack to ensure Amazon S3 bu
 These next commands replaces the `null` context parameter in [`cdk.json`](./cdk.json) with the `PROJECT_UUID` defined above:
 
 ```bash
-jq --arg uuid $PROJECT_UUID '.context.prod.uuid=$ARGS.named.uuid' cdk.json > tmp && mv tmp cdk.json
+jq --arg uuid $PROJECT_UUID '.context.dev.uuid=$ARGS.named.uuid' cdk.json > tmp && mv tmp cdk.json
 ```
 
 #### 2 - Initialize submodules
@@ -219,7 +219,7 @@ The infrastructure can be deployed with the following command:
 
 ```bash
 cd ../../
-cdk bootstrap
+cdk bootstrap -c env="dev"
 cdk synth -c env="dev"    
 cdk deploy --all --require-approval never -c env="dev"    
 ```
@@ -359,7 +359,7 @@ s3://<S3_BUCKET>/turbsim/<IEC_WIND_TYPE>/<IEC_TURB>/
 In the case of the TurbSim job submitted through the `turbsim-job.json` file, the results path is: 
 
 ```bash
-s3://asset-openfast-b2ib29b23/turbsim/NTM/B/
+s3://asset-openfast-<uuid>/turbsim/NTM/B/
 ```
 
 Failed TurbSim input and summary files will be uploaded to the `_failed` directory in the path above. 
@@ -439,7 +439,7 @@ s3://<S3_BUCKET>/turbsim/<IEC_WIND_TYPE>/<IEC_TURB>/
 In the case of the TurbSim job submitted through the `turbsim-job.json` file, the results path is: 
 
 ```bash
-s3://asset-openfast-b2ib29b23/simulation/<CASE_ID>/dlc=<load-case>/
+s3://asset-openfast-<uuid>/simulation/<CASE_ID>/dlc=<load-case>/
 ```
 
 where `<CASE_ID>` is defined in `openfast-job.json` job definition and `<load-case>` is defined by the exchange sheet load case tag. 
