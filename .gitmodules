@@ -1,9 +1,3 @@
-[submodule "openfast/openfast"]
-	path = pkg/openfast/openfast
-	url = https://github.com/OpenFAST/openfast.git
-[submodule "turbsim/TurbSim"]
-	path = pkg/turbsim/TurbSim
-	url = https://github.com/old-NWTC/TurbSim.git
 [submodule "pkg/openfast/openfast"]
 	path = pkg/openfast/openfast
 	url = https://github.com/OpenFAST/openfast.git
