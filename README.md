@@ -220,11 +220,11 @@ The infrastructure can be deployed with the following command:
 ```bash
 cd ../../
 cdk bootstrap
-cdk synth -c env="prod"    
-cdk deploy --all --require-approval never -c env="prod"    
+cdk synth -c env="dev"    
+cdk deploy --all --require-approval never -c env="dev"    
 ```
 
-We are deploying infrastructure to a production environment in the above example, but you can also assign `env="dev"` to deploy in a development sandbox by defining a new `dev` context key in [cdk.json](./cdk.json). 
+We are deploying infrastructure to a development environment in the above example, but you can also assign `env="prod"` to deploy in a prodction sandbox by defining a new `dev` context key in [cdk.json](./cdk.json). 
 
 #### 6 - Retrieve the stack resource names
 
@@ -450,7 +450,7 @@ Failed TurbSim input and summary files will be uploaded to the `_failed` directo
 The infrastructure is destroyed using the following command:
 
 ```bash
-cdk destroy --all -c env="prod" 
+cdk destroy --all -c env="dev" 
 ```
 
 This CDK stack is configured to retain the S3 log and asset buckets. 

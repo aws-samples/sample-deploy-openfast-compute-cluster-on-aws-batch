@@ -82,8 +82,8 @@
     "@aws-cdk/aws-route53-targets:userPoolDomainNameMethodWithoutCustomResource": true,
     "@aws-cdk/aws-elasticloadbalancingV2:albDualstackWithoutPublicIpv4SecurityGroupRulesDefault": true,
     "@aws-cdk/aws-iam:oidcRejectUnauthorizedConnections": true,
-    "prod": {
-      "environment": "production",
+    "dev": {
+      "environment": "development",
       "project": "openfast",
       "uuid": null,
       "cidr": "10.1.0.0/16",
