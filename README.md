@@ -76,7 +76,7 @@ The following packages will need to be installed on your environment to deploy a
 
 * [Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs) (tested on version `v23.6.1`) 
 * [TypeScript](https://www.npmjs.com/package/typescript) (tested on version `5.6.3`)
-* [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) (tested on version `2.177.0 (build b396961)`)
+* [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) (tested on version `2.1002.0 (build 09ef5a0)`)
 * [jq](https://jqlang.github.io/jq/download/) command line JSON parser to retrieve AWS services names (tested using version `1.7.1`)
 * A container development client, such as Docker or [Finch](https://github.com/runfinch/finch) 
 * This project relies on OpenFAST v4.0.0 (commit ID `da685d49`) and TurbSim (commit ID `873c7a70`)
