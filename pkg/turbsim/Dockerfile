@@ -1,7 +1,6 @@
-# If you want to run turbsim container locally: 
+# To run turbsim container locally: 
 # 
-#     $ docker run -v /Users/usr/.aws/:/root/.aws \
-#         -e S3_BUCKET='<sw3-bucket-name>' \
+#     $ docker run -e S3_BUCKET='<sw3-bucket-name>' \
 #         -e AWS_PROFILE='<profile>' \
 #         -e AWS_BATCH_JOB_ARRAY_INDEX='99' \
 #         -e IEC_TURB='B' -e IEC_WIND_TYPE='NTM' -it turbsim
