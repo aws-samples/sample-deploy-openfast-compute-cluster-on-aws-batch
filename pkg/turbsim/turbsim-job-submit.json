@@ -1,0 +1,27 @@
+{
+    "jobName": "turbsim-ntm-b",
+    "jobQueue": "job-queue-fast-b4bc212c",
+    "arrayProperties": {
+        "size": 264
+    },
+    "containerOverrides": {
+        "environment": [
+            {
+                "name": "IEC_TURB",
+                "value": "B"
+            },
+            {
+                "name": "IEC_WIND_TYPE",
+                "value": "NTM"
+            },
+            {
+                "name": "S3_BUCKET",
+                "value": "s3://asset-fast-b4bc212c"
+            }
+        ]
+    },
+    "jobDefinition": "turbsim-job-fast-b4bc212c",
+    "timeout": {
+        "attemptDurationSeconds": 5000
+    }
+}

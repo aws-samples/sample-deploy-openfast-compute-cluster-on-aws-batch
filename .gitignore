@@ -1,0 +1,16 @@
+*.bts
+*.sum
+*.inp
+*.log
+.env
+*.DS_Store
+*.json
+
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
