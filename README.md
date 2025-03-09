@@ -64,6 +64,8 @@ This assumes 264 TurbSim input files are generated and 264 OpenFAST simulations 
 | Amazon S3 | < $1 |
 | Amazon CloudWatch | < $1 |
 
+Be sure to destroy the infrastructure as descirbed in the [cleanup](#cleanup) section to avoid costs when you are done evaluating this sample code. 
+
 # Getting started
 
 This Guidance uses AWS CDK. 
