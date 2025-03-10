@@ -25,10 +25,10 @@
 This sample code deploys an [AWS Batch](https://aws.amazon.com/batch/) compute cluster to run thousands of [OpenFAST](https://github.com/OpenFAST/openfast) simulations on AWS. 
 However, this sample code can be adapted to run any batch workload on AWS requiring pre-processing, simulations, and post-processing steps. 
 
-OpenFAST is a physics-based, open-source wind turbine global performance simulation program for designing wind turbines in alignment with IEC 61400-1 (onshore wind turbines) and IEC 61400-3 (offshore wind turbine) design standards. 
+OpenFAST is a physics-based, open-source wind turbine global performance simulation application for designing wind turbines in accordance with IEC 61400-1 (onshore wind turbines) and IEC 61400-3 (offshore wind turbine) standards. 
 OpenFAST is containerized using Docker and simulations are run in a private subnet isolated from the internet.
 The only access points to the simulation are through VPC endpoints with [AWS PrivateLink](https://aws.amazon.com/privatelink/). 
-This guidance uses the [AWS Cloud Development Kit (AWS CDK)](https://aws.amazon.com/cdk/) to deploy infrastructure assets.
+This guidance uses the [AWS Cloud Development Kit (AWS CDK)](https://aws.amazon.com/cdk/) to deploy infrastructure assets. 
 
 ## Capabilities
 
