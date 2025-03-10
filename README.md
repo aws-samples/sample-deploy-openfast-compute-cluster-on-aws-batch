@@ -58,7 +58,7 @@ This assumes 264 TurbSim input files are generated and 264 OpenFAST simulations 
 
 | AWS service  | Cost [USD] |
 | ----------- | ------------ |
-| Amazon EC2 | $11 |
+| Amazon EC2 | <$9 |
 | Amazon Virtual Private Cloud | < $1 |
 | Amazon ECR | < $1 |
 | Amazon ECS | < $1 |
