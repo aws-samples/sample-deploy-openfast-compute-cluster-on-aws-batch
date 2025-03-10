@@ -9,9 +9,6 @@ import json
 import logging
 import sys
 
-# import boto3
-# import watchtower
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -25,19 +22,6 @@ ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-
-# fh = logging.FileHandler('logging.log', 'w')
-# fh.setFormatter(formatter)
-# fh.setLevel(logging.DEBUG)
-# logger.addHandler(fh)
-
-# cwh = watchtower.CloudWatchLogHandler(
-#     log_group='/openfast/turbsim/prep',
-#     boto3_client=boto3.client('logs', region_name='us-west-2')
-# )
-# cwh.setFormatter(formatter)
-# cwh.setLevel(logging.DEBUG)
-# logger.addHandler(cwh)
 
 
 def linspace(start, stop, n):
@@ -54,17 +38,17 @@ def linspace(start, stop, n):
 def create_input_file(idx, wind_type, ti):
     """
     """
-    fname = './input/exchange-sheet.json'
+    fname = './input/simulation-definition.json'
     with open(fname, 'r') as f:
-        logger.info('Loading exchange sheet {}'.format(fname))
-        exchange_data = json.load(f)
+        logger.info('Loading definition sheet {}'.format(fname))
+        definition_data = json.load(f)
 
     fname = './input/turbsim-template.inp'
     with open(fname, 'r') as f: 
         logger.info('Loading TurbSim template file {}'.format(fname))
         base = f.read() 
   
-    for k,v in exchange_data['files'][idx].items():
+    for k,v in definition_data['files'][idx].items():
         logger.info('Updating TurbSim input parameter {} --> {}'.format(k,v))
         base = base.replace(k, '{}   {}'.format(v,k))
 
@@ -80,7 +64,7 @@ def create_input_file(idx, wind_type, ti):
     logger.info('Updating TurbSim input parameter IEC_WIND_TYPE --> {}'.format(wind_type))
     logger.info('Updating TurbSim input parameter IEC_TURB --> {}'.format(ti))
 
-    fname = exchange_data['files'][idx]['fname']
+    fname = definition_data['files'][idx]['fname']
     fname = fname.replace('IEC_TURB', ti)
     fname = fname.replace('IEC_WIND_TYPE', wind_type)
 
@@ -91,7 +75,7 @@ def create_input_file(idx, wind_type, ti):
     return fname
 
 
-def create_exchange_sheet():
+def create_simulation_definition():
     """
     """
     ws = list(linspace(4, 25, 22))
@@ -112,7 +96,7 @@ def create_exchange_sheet():
                 'URef': w
             })
 
-    fname = 'exchange-sheet.json'
+    fname = 'simulation-definition.json'
     json_string = json.dumps(d, indent=4)
     logger.info('Writting *.json file {}'.format(fname))
     with open(fname, 'w') as f: 
@@ -125,14 +109,14 @@ if __name__=='__main__':
     """
     parser = argparse.ArgumentParser(
         description='Process input file for TurbSim. Example: \
-            $ python prep.py --exchange-sheet \
+            $ python prep.py --simulation-definition \
             $ python prep.py --turbsim --index=99 --type=NTM --intensity=B'
     )
     parser.add_argument(
-        '--exchange-sheet',
-        dest='exchange_sheet', 
+        '--simulation-definition',
+        dest='simulation_definition', 
         action='store_true',
-        help='Create json exchange sheet'
+        help='Create json definition sheet'
     )
     parser.add_argument(
         '--turbsim',
@@ -170,16 +154,16 @@ if __name__=='__main__':
     try: 
         args = parser.parse_args()
         logger.info('Arguments: \n' + \
-            f'   exchange-sheet: {args.exchange_sheet} \n' + \
+            f'   simulation-definition: {args.simulation_definition} \n' + \
             f'   turbsim: {args.turbsim_file} \n' + \
             f'   index: {args.idx} \n' + \
             f'   type: {args.wind_type} \n' + \
             f'   intesity: { args.ti}'
         )
 
-        if args.exchange_sheet:
-            logger.info('Creating TurbSim exchange sheet')
-            create_exchange_sheet()
+        if args.simulation_definition:
+            logger.info('Creating TurbSim definition sheet')
+            create_simulation_definition()
         elif args.turbsim_file:
             logger.info('Creating TurbSim input file')
             fname = create_input_file(args.idx, args.wind_type, args.ti)

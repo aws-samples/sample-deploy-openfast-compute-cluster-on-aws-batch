@@ -4,7 +4,7 @@
 #       -e CASE_ID='iteration-2' \
 #       -e AWS_BATCH_JOB_ARRAY_INDEX='200' \
 #       -e S3_BUCKET='<sw3-bucket-name>' \
-#       -e EXCHANGE_SHEET='./exchange-sheets/exchange-sheet-DLC12-NTM.json' \
+#       -e SIMULATION_DEFINITION='./simulation-definition/DLC12-NTM-simulation-definition.json' \
 #       -e IEC_TURB='B' -e AWS_PROFILE='<profile>' -it openfast
 
 FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023 AS build
@@ -41,7 +41,7 @@ FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023
 SHELL ["/bin/bash", "-c"]
 COPY --from=build /usr/openfast/install /app/   
 COPY ./input /input
-COPY ./exchange-sheets /exchange-sheets
+COPY ./simulation-definition /simulation-definition
 COPY prep_openfast.py prep_openfast.py
 RUN yum -y update
 ENV TZ=America/Denver
@@ -56,9 +56,9 @@ RUN /setup.sh
 
 RUN echo $'#!/bin/bash\n\
 source .env/bin/activate\n\
-DLC=`python prep_openfast.py --get-dlc --file $EXCHANGE_SHEET`\n\
-IEC_WIND_TYPE=`python prep_openfast.py --get-turbulence-type --file $EXCHANGE_SHEET`\n\
-FAST_FILE=`python prep_openfast.py --create-fst --file $EXCHANGE_SHEET --index $AWS_BATCH_JOB_ARRAY_INDEX --ti $IEC_TURB --wc "$WIND_CLASS"`\n\
+DLC=`python prep_openfast.py --get-dlc --file $SIMULATION_DEFINITION`\n\
+IEC_WIND_TYPE=`python prep_openfast.py --get-turbulence-type --file $SIMULATION_DEFINITION`\n\
+FAST_FILE=`python prep_openfast.py --create-fst --file $SIMULATION_DEFINITION --index $AWS_BATCH_JOB_ARRAY_INDEX --ti $IEC_TURB --wc "$WIND_CLASS"`\n\
 TURBSIM_FILE=`python prep_openfast.py --get-turbsim-path --file ./input/_5mw-inflowwind.dat`\n\
 WS=`python prep_openfast.py --get-wind-speed --file ./input/_5mw-inflowwind.dat`\n\
 cd input\n\

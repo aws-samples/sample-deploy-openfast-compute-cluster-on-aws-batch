@@ -31,7 +31,7 @@ _DLC = {
 }
 
 
-def _write_infowwind_file(exchange_data, idx, ti, wc):
+def _write_infowwind_file(definition_data, idx, ti, wc):
     """
     """
     template = './input/templates/_5mw-inflowwind-template.dat'
@@ -39,7 +39,7 @@ def _write_infowwind_file(exchange_data, idx, ti, wc):
         logger.info('Loading InflowWind file {}'.format(template))
         sheet = f.read() 
 
-    f = exchange_data['files'][idx]['openfast-keys']['__FileName_BTS__']
+    f = definition_data['files'][idx]['openfast-keys']['__FileName_BTS__']
     f = f.replace('$TI', ti)
     f = f.replace('$WC', wc)
     fpath = './input/_5mw-inflowwind.dat'
@@ -50,7 +50,7 @@ def _write_infowwind_file(exchange_data, idx, ti, wc):
         f.write(sheet) 
 
 
-def _write_elastodyn_file(exchange_data, idx):
+def _write_elastodyn_file(definition_data, idx):
     """
     """
     template = './input/templates/_5mw-elastodyn-template.dat'
@@ -61,7 +61,7 @@ def _write_elastodyn_file(exchange_data, idx):
     fpath = './input/_5mw-elastodyn.dat'
     params = ['__BlPitch(1)__', '__BlPitch(2)__', '__BlPitch(3)__', '__RotSpeed__']
     for p in params:
-        item = exchange_data['files'][idx]['openfast-keys'][p]
+        item = definition_data['files'][idx]['openfast-keys'][p]
         logger.info('Updating InflowWind parameter {} > {}'.format(p, float(item)))
         sheet = sheet.replace(p, '{}  {}'.format(item, p.replace('__', '')))
     
@@ -70,7 +70,7 @@ def _write_elastodyn_file(exchange_data, idx):
         f.write(sheet) 
 
 
-def _write_fst_file(exchange_data, idx, ti, wc):
+def _write_fst_file(definition_data, idx, ti, wc):
     """
     """
     template = './input/templates/_5mw-land-template.fst'
@@ -78,7 +78,7 @@ def _write_fst_file(exchange_data, idx, ti, wc):
         logger.info('Loading OpenFAST *.fst file {}'.format(template))
         sheet = f.read() 
 
-    fname = exchange_data['files'][idx]['file-name']
+    fname = definition_data['files'][idx]['file-name']
     fname = fname.replace('$TI', ti)
     fname = fname.replace('$WC', wc)
     fpath = './input/{}'.format(fname)
@@ -94,16 +94,16 @@ def create_input_file(ex_sheet, idx, ti, wc=''):
     """
     """
     with open(ex_sheet, 'r') as f:
-        logger.info('Loading exchange sheet {}'.format(ex_sheet))
-        exchange_data = json.load(f)
+        logger.info('Loading definition sheet {}'.format(ex_sheet))
+        definition_data = json.load(f)
 
-    _write_infowwind_file(exchange_data, idx, ti, wc)
-    _write_elastodyn_file(exchange_data, idx)
-    fst_fname = _write_fst_file(exchange_data, idx, ti, wc)
+    _write_infowwind_file(definition_data, idx, ti, wc)
+    _write_elastodyn_file(definition_data, idx)
+    fst_fname = _write_fst_file(definition_data, idx, ti, wc)
     return fst_fname
 
 
-def create_exchange_sheet(lc):
+def create_simulation_definition(lc):
     """
     """
     data = {}
@@ -137,7 +137,7 @@ def create_exchange_sheet(lc):
                 }
             })
 
-    ex_sheet_name = 'exchange-sheet-DLC{}-{}.json'.format(lc, _DLC[lc])
+    ex_sheet_name = 'DLC{}-{}-simulation-definition.json'.format(lc, _DLC[lc])
     json_string = json.dumps(data, indent=4)
     logger.info('Writting *.json file {}'.format(ex_sheet_name))
     with open(ex_sheet_name, 'w') as f: 
@@ -179,20 +179,20 @@ if __name__=='__main__':
     """
     parser = argparse.ArgumentParser(
         description='Process input file for OpenFAST. Example: \
-            $ python prep_openfast.py --create-exchange-sheet --dlc 13 \
-            $ python prep_openfast.py --create-exchange-sheet --dlc 12 \
-            $ python prep_openfast.py --create-fst --file ./exchange-sheets/exchange-sheet-DLC12-NTM.json --index 30 --ti B \
-            $ python prep_openfast.py --create-fst --file ./exchange-sheets/exchange-sheet-DLC13-ETM.json --index 200 --ti B --wc 2 \
+            $ python prep_openfast.py --create-simulation-definition --dlc 13 \
+            $ python prep_openfast.py --create-simulation-definition --dlc 12 \
+            $ python prep_openfast.py --create-fst --file ./simulation-definition/DLC12-NTM-simulation-definition.json --index 30 --ti B \
+            $ python prep_openfast.py --create-fst --file ./simulation-definition/DLC13-ETM-simulation-definition.json --index 200 --ti B --wc 2 \
             $ python prep_openfast.py --get-turbsim-path --file ./input/_5mw-inflowwind.dat \
             $ python prep_openfast.py --get-wind-speed --file ./input/_5mw-inflowwind.dat \
-            $ python prep_openfast.py --get-dlc --file ./exchange-sheets/exchange-sheet-DLC12-NTM.json \
-            $ python prep_openfast.py --get-turbulence-type --file ./exchange-sheets/exchange-sheet-DLC12-NTM.json'
+            $ python prep_openfast.py --get-dlc --file ./simulation-definition/DLC12-NTM-simulation-definition.json \
+            $ python prep_openfast.py --get-turbulence-type --file ./simulation-definition/DLC12-NTM-simulation-definition.json'
     )
     parser.add_argument(
-        '--create-exchange-sheet',
-        dest='create_exchange_sheet', 
+        '--create-simulation-definition',
+        dest='create_simulation_definition', 
         action='store_true',
-        help='Create JSON exchange sheet'
+        help='Create JSON definition sheet'
     )
     parser.add_argument(
         '--create-fst',
@@ -254,20 +254,20 @@ if __name__=='__main__':
         '--get-dlc',
         dest='get_dlc', 
         action='store_true',
-        help='Get DLC from exchange sheet'
+        help='Get DLC from definition sheet'
     )
     parser.add_argument(
         '--get-turbulence-type',
         dest='get_turbulence_type', 
         action='store_true',
-        help='Get turbulence model type exchange sheet'
+        help='Get turbulence model type definition sheet'
     )
 
     logger.info('Executing prep_openfast.py for OpenFAST')
     try: 
         args = parser.parse_args()
         logger.info('Arguments: \n' + \
-            f'   create-exchange-sheet: {args.create_exchange_sheet} \n' + \
+            f'   create-simulation-definition: {args.create_simulation_definition} \n' + \
             f'   create-fst: {args.create_fst} \n' + \
             f'   get-turbsim-path: {args.get_turbsim_path} \n' + \
             f'   get-wind-speed: {args.get_wind_speed} \n' + \
@@ -280,9 +280,9 @@ if __name__=='__main__':
             f'   wc: {args.wc}'
         )
 
-        if args.create_exchange_sheet:
-            logger.info('Creating OpenFAST exchange sheet')
-            create_exchange_sheet(args.dlc)
+        if args.create_simulation_definition:
+            logger.info('Creating OpenFAST definition sheet')
+            create_simulation_definition(args.dlc)
         elif args.create_fst:
             logger.info('Creating OpenFAST input file')
             fpath = create_input_file(args.file, args.idx, args.ti, args.wc)
@@ -299,12 +299,12 @@ if __name__=='__main__':
             logger.info('Wind speed: <{}>'.format(ws))
             sys.stdout.write(ws)
         elif args.get_dlc:
-            logger.info('Retrieving dlc from exchange sheet {}'.format(args.file))
+            logger.info('Retrieving dlc from definition sheet {}'.format(args.file))
             dlc = get_dlc(args.file)
             logger.info('DLC: <{}>'.format(dlc))
             sys.stdout.write(dlc)
         elif args.get_turbulence_type:
-            logger.info('Retrieving turbulence types from exchange sheet {}'.format(args.file))
+            logger.info('Retrieving turbulence types from definition sheet {}'.format(args.file))
             model = get_turbulence_type(args.file)
             logger.info('Turbulence type: <{}>'.format(model))
             sys.stdout.write(model)
