@@ -40,7 +40,6 @@ FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023
 
 SHELL ["/bin/bash", "-c"]
 COPY --from=build /usr/openfast/install /app/   
-# RUN mv /usr/openfast/install /app/   
 COPY ./input /input
 COPY ./exchange-sheets /exchange-sheets
 COPY prep_openfast.py prep_openfast.py
