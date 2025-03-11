@@ -181,12 +181,12 @@ if __name__=='__main__':
         description='Process input file for OpenFAST. Example: \
             $ python prep_openfast.py --create-simulation-definition --dlc 13 \
             $ python prep_openfast.py --create-simulation-definition --dlc 12 \
-            $ python prep_openfast.py --create-fst --file ./simulation-definition/DLC12-NTM-simulation-definition.json --index 30 --ti B \
-            $ python prep_openfast.py --create-fst --file ./simulation-definition/DLC13-ETM-simulation-definition.json --index 200 --ti B --wc 2 \
+            $ python prep_openfast.py --create-fst --file ./simulation-definition/simulation-definition-DLC12-NTM.json --index 30 --ti B \
+            $ python prep_openfast.py --create-fst --file ./simulation-definition/simulation-definition-DLC13-ETM.json --index 200 --ti B --wc 2 \
             $ python prep_openfast.py --get-turbsim-path --file ./input/_5mw-inflowwind.dat \
             $ python prep_openfast.py --get-wind-speed --file ./input/_5mw-inflowwind.dat \
-            $ python prep_openfast.py --get-dlc --file ./simulation-definition/DLC12-NTM-simulation-definition.json \
-            $ python prep_openfast.py --get-turbulence-type --file ./simulation-definition/DLC12-NTM-simulation-definition.json'
+            $ python prep_openfast.py --get-dlc --file ./simulation-definition/simulation-definition-DLC12-NTM.json \
+            $ python prep_openfast.py --get-turbulence-type --file ./simulation-definition/simulation-definition-DLC12-NTM.json'
     )
     parser.add_argument(
         '--create-simulation-definition',

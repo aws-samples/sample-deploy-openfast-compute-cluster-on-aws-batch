@@ -4,7 +4,7 @@
 #       -e CASE_ID='iteration-2' \
 #       -e AWS_BATCH_JOB_ARRAY_INDEX='200' \
 #       -e S3_BUCKET='<sw3-bucket-name>' \
-#       -e SIMULATION_DEFINITION='./simulation-definition/DLC12-NTM-simulation-definition.json' \
+#       -e SIMULATION_DEFINITION='./simulation-definition/simulation-definition-DLC12-NTM.json' \
 #       -e IEC_TURB='B' -e AWS_PROFILE='<profile>' -it openfast
 
 FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023 AS build

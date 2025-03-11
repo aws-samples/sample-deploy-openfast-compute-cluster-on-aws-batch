@@ -39,7 +39,7 @@ This sample code helps you:
 * Run thousands of [OpenFAST](https://github.com/OpenFAST/openfast) simulations
 * We provide [TurbSim simulation](./pkg/turbsim/input/simulation-definition.json) and [OpenFAST simulation](./pkg/openfast/simulation-definition/) definitions to auto-generate hundreds of simulation input files as a starting point
 
-Two OpenFAST definition sheets sheets are provided to run [DLC 1.2](./pkg/openfast/simulation-definition/DLC12-NTM-simulation-definition.json) and [DLC 1.3](./pkg/openfast/simulation-definition/DLC13-ETM-simulation-definition.json) as part of this sample code. 
+Two OpenFAST definition sheets sheets are provided to run [DLC 1.2](./pkg/openfast/simulation-definition/simulation-definition-DLC12-NTM.json) and [DLC 1.3](./pkg/openfast/simulation-definition/simulation-definition-DLC13-ETM.json) as part of this sample code. 
 These definition files run wind turbine simulation cases defined in IEC 61400-1. 
 
 ## Authors
@@ -400,7 +400,7 @@ cat <<EOF > ./openfast-job.json
             },
             {
                 "name": "SIMULATION_DEFINITION",
-                "value": "./simulation-definition/DLC12-NTM-simulation-definition.json"
+                "value": "./simulation-definition/simulation-definition-DLC12-NTM.json"
             },
             {
                 "name": "CASE_ID",
