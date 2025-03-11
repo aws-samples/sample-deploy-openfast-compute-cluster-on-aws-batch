@@ -1,4 +1,4 @@
-# Deploy an OpenFAST compute cluster using AWS Batch to run thousands of wind turbine simulations
+# Using AWS Batch to set up a compute cluster and deploy thousands of OpenFAST wind turbine simulations
 
 - [Overview](#overview)
   - [Capabilities](#capabilities)
@@ -25,10 +25,10 @@
 This sample code deploys an [AWS Batch](https://aws.amazon.com/batch/) compute cluster to run thousands of [OpenFAST](https://github.com/OpenFAST/openfast) simulations on AWS. 
 However, this sample code can be adapted to run any batch workload on AWS requiring pre-processing, simulations, and post-processing steps. 
 
-OpenFAST is a physics-based, open-source wind turbine global performance simulation program for designing wind turbines in alignment with IEC 61400-1 (onshore wind turbines) and IEC 61400-3 (offshore wind turbine) design standards. 
+OpenFAST is a physics-based, open-source wind turbine global performance simulation application for designing wind turbines in accordance with IEC 61400-1 (onshore wind turbines) and IEC 61400-3 (offshore wind turbine) standards. 
 OpenFAST is containerized using Docker and simulations are run in a private subnet isolated from the internet.
 The only access points to the simulation are through VPC endpoints with [AWS PrivateLink](https://aws.amazon.com/privatelink/). 
-This guidance uses the [AWS Cloud Development Kit (AWS CDK)](https://aws.amazon.com/cdk/) to deploy infrastructure assets.
+This guidance uses the [AWS Cloud Development Kit (AWS CDK)](https://aws.amazon.com/cdk/) to deploy infrastructure assets. 
 
 ## Capabilities
 
@@ -37,9 +37,10 @@ This sample code helps you:
 * Deploy AWS resources using AWS CDK
 * Create thousands of turbulence input files for OpenFAST using [TurbSim](https://github.com/old-NWTC/TurbSim)
 * Run thousands of [OpenFAST](https://github.com/OpenFAST/openfast) simulations
-* We provides [TurbSim exchange sheets](./pkg/turbsim//input/exchange-sheet.json) and [OpenFAST exchage sheets](./pkg/openfast/exchange-sheets/) to auto-generate hundreds of simulation input files as a starting point
+* We provide [TurbSim simulation](./pkg/turbsim/input/simulation-definition.json) and [OpenFAST simulation](./pkg/openfast/simulation-definition/) definitions to auto-generate hundreds of simulation input files as a starting point
 
-Two OpenFAST exchange sheets are provided to run [DLC 1.2](./pkg/openfast/exchange-sheets/exchange-sheet-DLC12-NTM.json) and [DLC 1.3](./pkg/openfast/exchange-sheets/exchange-sheet-DLC13-ETM.json) as part of this sample code. These exchange sheets run wind turbine simulation cases defined in IEC 61400-1. 
+Two OpenFAST definition sheets sheets are provided to run [DLC 1.2](./pkg/openfast/simulation-definition/simulation-definition-DLC12-NTM.json) and [DLC 1.3](./pkg/openfast/simulation-definition/simulation-definition-DLC13-ETM.json) as part of this sample code. 
+These definition files run wind turbine simulation cases defined in IEC 61400-1. 
 
 ## Authors
 
@@ -57,7 +58,7 @@ This assumes 264 TurbSim input files are generated and 264 OpenFAST simulations 
 
 | AWS service  | Cost [USD] |
 | ----------- | ------------ |
-| Amazon EC2 | $11 |
+| Amazon EC2 | <$9 |
 | Amazon Virtual Private Cloud | < $1 |
 | Amazon ECR | < $1 |
 | Amazon ECS | < $1 |
@@ -398,8 +399,8 @@ cat <<EOF > ./openfast-job.json
                 "value": "$S3_ASSET_BUCKET_NAME"
             },
             {
-                "name": "EXCHANGE_SHEET",
-                "value": "./exchange-sheets/exchange-sheet-DLC12-NTM.json"
+                "name": "SIMULATION_DEFINITION",
+                "value": "./simulation-definition/simulation-definition-DLC12-NTM.json"
             },
             {
                 "name": "CASE_ID",
@@ -444,7 +445,7 @@ In the case of the TurbSim job submitted through the `turbsim-job.json` file, th
 s3://asset-openfast-<uuid>/simulation/<CASE_ID>/dlc=<load-case>/
 ```
 
-where `<CASE_ID>` is defined in `openfast-job.json` job definition and `<load-case>` is defined by the exchange sheet load case tag. 
+where `<CASE_ID>` is defined in `openfast-job.json` job file and `<load-case>` is defined by the simulation definition sheet load case tag. 
 Failed TurbSim input and summary files will be uploaded to the `_failed` directory in the path above and grouped by wind speed. 
 
 # Cleanup
