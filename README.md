@@ -1,4 +1,4 @@
-# Deploy thousands of OpenFAST wind turbine simulation using AWS Batch
+# Deploy thousands of OpenFAST wind turbine simulations using AWS Batch
 
 - [Overview](#overview)
   - [Capabilities](#capabilities)
