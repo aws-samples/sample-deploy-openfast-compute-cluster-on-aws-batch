@@ -85,7 +85,7 @@
     "dev": {
       "environment": "development",
       "project": "openfast",
-      "uuid": "3bbbd8be-9c6e-4a",
+      "uuid": null,
       "cidr": "10.1.0.0/16",
       "cidrSubnetA": "10.1.128.0/20",
       "cidrSubnetB": "10.1.144.0/20",
