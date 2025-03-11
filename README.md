@@ -1,4 +1,4 @@
-# Using AWS Batch to set up a compute cluster and deploy thousands of OpenFAST wind turbine simulations
+# Deploy thousands of OpenFAST wind turbine simulation using AWS Batch
 
 - [Overview](#overview)
   - [Capabilities](#capabilities)
