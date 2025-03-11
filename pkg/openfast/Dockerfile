@@ -70,7 +70,7 @@ if [[ "$STATUS" == "0" ]]; then\n\
     exit 0\n\
 else\n\
     echo "[ERROR] OpenFAST failed: job $AWS_BATCH_JOB_ARRAY_INDEX <$FAST_FILE>"\n\
-    for i in *.{fst,ech,sum,out,outb}; do aws s3 cp ${i} $S3_BUCKET/simulation/$CASE_ID/dlc=$DLC$IEC_WIND_TYPE/_failed/ws=$WS/job-index=$AWS_BATCH_JOB_ARRAY_INDEX/${i}; done\n\
+    for i in *.{fst,ech,sum,out,outb}; do aws s3 cp ${i} $S3_BUCKET/simulation/$CASE_ID/dlc=$DLC-$WIND_CLASS$IEC_WIND_TYPE/_failed/ws=$WS/job-index=$AWS_BATCH_JOB_ARRAY_INDEX/${i}; done\n\
     aws s3 cp _5mw-elastodyn.dat $S3_BUCKET/simulation/$CASE_ID/dlc=$DLC-$WIND_CLASS$IEC_WIND_TYPE/_failed/ws=$WS/job-index=$AWS_BATCH_JOB_ARRAY_INDEX/_5mw-elastodyn.dat\n\
     aws s3 cp _5mw-elastodyn.dat $S3_BUCKET/simulation/$CASE_ID/dlc=$DLC-$WIND_CLASS$IEC_WIND_TYPE/_failed/ws=$WS/job-index=$AWS_BATCH_JOB_ARRAY_INDEX/_5mw-inflowwind.dat\n\
     exit 1\n\
