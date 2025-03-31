@@ -11,13 +11,9 @@
   - [Prerequisites](#prerequisites)
 - [Build the infrastructure](#build-the-infrastructure)
   - [Local AWS configurations](#1---local-aws-configurations)
-  - [Initialize submodules](#2---initialize-submodules)
-  - [Apply the TurbSim patch](#3---apply-the-turbsim-patch)
-  - [Build the containers](#4---build-the-containers)
-  - [Retrieve the stack resource names](#6---retrieve-the-stack-resource-names)
-  - [Push images to Amazon ECR](#7---push-images-to-amazon-ecr)
-  - [Submit TurbSim job](#8---submit-turbsim-job)
-  - [Submit OpenFAST job](#9---submit-openfast-job)
+  - [Initialize and build OpenFAST and TurbSim containers](#2---initialize-and-build-openfast-and-turbsim-containers)
+  - [Deploy the AWS infrastructure with CDK](#3---deploy-the-aws-infrastructure-with-cdk)
+  - [Run TurbSim and OpenFAST simulations](#4---run-turbsim-and-openfast-simulations)
 - [Cleanup](#cleanup)
 
 # Overview
@@ -130,17 +126,12 @@ cdk --version || npm install -g aws-cdk
 
 # Build the infrastructure
 
-There are seven steps to deploy the sample code guidance in your AWS account:
+There are four workstreams to deploy this sample code in your AWS account:
 
 1. Local AWS configurations
-2. Initialize OpenFAST and TurbSim submodules
-3. Apply TurbSim patch 
-4. Build the OpenFAST and TurbSim containers
-5. Bootstrap CDK and deploy the infrastructure
-6. Retrieve the stack resource names using [resource.sh](./resource.sh)
-7. Push the containers to [Amazon Elastic Container Registry (ECR)](https://aws.amazon.com/ecr/)
-8. Submit the TurbSim batch array jobs and wait for them to complete
-9. Submit the OpenFAST batch array jobs and wait for them to complete
+2. Initialize and build OpenFAST and TurbSim containers
+3. Deploy the AWS infrastructure with CDK
+4. Run TurbSim and OpenFAST simulations
 
 #### 1 - Local AWS configurations
 
@@ -169,13 +160,16 @@ These next commands replaces the `null` context parameter in [`cdk.json`](./cdk.
 jq --arg uuid $PROJECT_UUID '.context.dev.uuid=$ARGS.named.uuid' cdk.json > tmp && mv tmp cdk.json
 ```
 
-#### 2 - Initialize submodules
+#### 2 - Initialize and build OpenFAST and TurbSim containers
+
+This project requires you to build two containers to execute TurbSim and OpenFAST on AWS Batch. 
+The first step is the clone the OpenFAST and TurbSim repositories: 
 
 ```bash
 git submodule update --init --recursive
 ```
 
-#### 3 - Apply the TurbSim patch
+Next, let's apply the TurbSim patch to ensure we are building a 64-bit version of the application: 
 
 ```bash
 cd ./pkg/turbsim/TurbSim
@@ -186,35 +180,23 @@ git apply 873c7a70.patch
 rm 873c7a70.patch
 ```
 
-#### 4 - Build the containers
-
-This project requires you to build two containers to execute TurbSim and OpenFAST on AWS Batch. 
-
-##### 4.a - Build OpenFAST
-
-Type the following commands to build OpenFAST: 
+Next, let's build application container by running: 
 
 ```bash
 aws ecr-public get-login-password --region us-east-1| docker login --username AWS --password-stdin public.ecr.aws
+docker build --no-cache -t turbsim .
+```
+
+Let's build OpenFAST next by running: 
+
+```bash
 cd ../../openfast/
 docker build --no-cache -t openfast .
 ```
 
 This task will take approximately 1 hour to complete. 
 
-##### 4.b - Build TurbSim
-
-You can build TurbSim by running the command: 
-
-```bash
-aws ecr-public get-login-password --region us-east-1| docker login --username AWS --password-stdin public.ecr.aws
-cd ../turbsim
-docker build --no-cache -t turbsim .
-```
-
-This task will take a few minutes to complete. 
-
-#### 5 - Deploy the infrastructure
+#### 3 - Deploy the AWS infrastructure with CDK
 
 If you are deploying this infrastructure for the first time, ensure you are bootstrapping the environment. 
 Bootstrapping is a one-time action to provision resources for deploying infrastructure.
@@ -228,11 +210,7 @@ cdk deploy --all --require-approval never -c env="dev"
 ```
 
 We are deploying infrastructure to a development environment in the above example, but you can also assign `env="prod"` to deploy in a prodction sandbox by defining a new `dev` context key in [cdk.json](./cdk.json). 
-
-#### 6 - Retrieve the stack resource names
-
-Resource names are output during the `cdk deploy` step.
-But you can retrieve resource names by running this command:
+Resource names are output during the `cdk deploy` step, but you can retrieve resource names by running this command:
 
 ```bash
 source resource.sh
@@ -250,8 +228,6 @@ This command will output the deployed resources names:
 
 These resource ID's are needed in subsequent steps to push containers to ECR and dispatch batch array jobs. 
 
-#### 7 - Push images to Amazon ECR
-
 The next step is to push the OpenFAST and TurbSim containers to ECR. 
 This command pushes the TurbSim image to the `TURBSIM_REGISTRY` in ECR: 
 
@@ -268,7 +244,7 @@ docker tag openfast:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$O
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$OPENFAST_REGISTRY":latest
 ```
 
-#### 8 - Submit TurbSim job
+#### 4 - Run TurbSim and OpenFAST simulations
 
 Refer to the [TurbSim README](./pkg/turbsim/README.md) on how to customize the JSON file to evaluate different turbulence conditions. 
 Create a JSON file named `turbsim-job.json` by pasting the following contents in your terminal: 
@@ -369,8 +345,6 @@ Failed TurbSim input and summary files will be uploaded to the `_failed` directo
 Advanced to the next step after 264 jobs are in the `SUCCEEDED` state. 
 
 **NOTE:** Two TurbSim simulations will fail in this demo. This is intentional to demonstrate CloudWatch logging capability to extract failed simulation information.
-
-#### 9 - Submit OpenFAST job
 
 We follow a similar process to run OpenFAST simulations. 
 Refer to the [OpenFAST README](./pkg/openfast/README.md) for JSON file customizations to evaluate different load cases. 
